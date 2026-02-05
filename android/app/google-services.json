@@ -1,0 +1,162 @@
+{
+  "project_info": {
+    "project_number": "231154851270",
+    "project_id": "nlytical-5e6c9",
+    "storage_bucket": "nlytical-5e6c9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:231154851270:android:7dc5b5a764652d2317a6c7",
+        "android_client_info": {
+          "package_name": "com.nlytical_app.primo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "231154851270-0us9e8t23a5858g59410c7399bm7et1e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nlytical_app.primo",
+            "certificate_hash": "a113330e195ceb802d03096ee1035dab4803bf31"
+          }
+        },
+        {
+          "client_id": "231154851270-kbhgsjkj81m4dd30h7p0md180l65vur9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nlytical_app.primo",
+            "certificate_hash": "cf69cec5ca90530b0b856c6f50b5b4af0c47b6eb"
+          }
+        },
+        {
+          "client_id": "231154851270-ql73ltj0hiocph09ego0fkmmiufsm0js.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nlytical_app.primo",
+            "certificate_hash": "473cb4f02265f0cc4b0f964fbae55ac86a30fb45"
+          }
+        },
+        {
+          "client_id": "231154851270-tks4mjt8ath5r04vces667jq905j52nf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nlytical_app.primo",
+            "certificate_hash": "67a4b3f3a9af3777c5d203091db0b7e424ec5b0d"
+          }
+        },
+        {
+          "client_id": "231154851270-jo8pmg3sdbudsja4j549ooadtcalm995.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwyOKb9kZS6bYBexFqZismv2Z-oeVx3YI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "231154851270-jo8pmg3sdbudsja4j549ooadtcalm995.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "231154851270-3vbidg3vbdtq358dup577udrn0504smb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.primocys.nlytical"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:231154851270:android:3a17a775d8c3abfe17a6c7",
+        "android_client_info": {
+          "package_name": "com.primocys.nlytical"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "231154851270-0thvb45l371klpi72toh51srkm6dth1t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.primocys.nlytical",
+            "certificate_hash": "b4dc7472f8aedb2cc8fa00e61bc34caae2e9df7d"
+          }
+        },
+        {
+          "client_id": "231154851270-1ee9tg3v69aofqslpmv0cpp9kd7o54ol.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.primocys.nlytical",
+            "certificate_hash": "89dfc984c77768b4ddc0c4152cdf2f433ff07ba0"
+          }
+        },
+        {
+          "client_id": "231154851270-2ohv8u9mb13q2pd8bq6ggnstsar5l3c7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.primocys.nlytical",
+            "certificate_hash": "b36ccc86364fa1bb353ac08732703af3a0155dbd"
+          }
+        },
+        {
+          "client_id": "231154851270-4g48i4on9mqugi00m1ght05fdlnbunp9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.primocys.nlytical",
+            "certificate_hash": "af0f5f2d08f288300883e32305863948a08e2bb8"
+          }
+        },
+        {
+          "client_id": "231154851270-q704ur4qchh414l66hf1h5damqi2q5cq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.primocys.nlytical",
+            "certificate_hash": "f4ecb47c08b23e9dd088b993bad156d42b953cd8"
+          }
+        },
+        {
+          "client_id": "231154851270-vhaltc5lrifo5nnubmpvttgsfjocgekp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.primocys.nlytical",
+            "certificate_hash": "473cb4f02265f0cc4b0f964fbae55ac86a30fb45"
+          }
+        },
+        {
+          "client_id": "231154851270-jo8pmg3sdbudsja4j549ooadtcalm995.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwyOKb9kZS6bYBexFqZismv2Z-oeVx3YI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "231154851270-jo8pmg3sdbudsja4j549ooadtcalm995.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "231154851270-3vbidg3vbdtq358dup577udrn0504smb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.primocys.nlytical"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

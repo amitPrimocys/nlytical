@@ -1,4 +1,4 @@
-package com.example.nlytical
+package com.nlytical_app.primo
 
 import io.flutter.embedding.android.FlutterActivity
 

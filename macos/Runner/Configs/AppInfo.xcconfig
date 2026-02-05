@@ -8,7 +8,7 @@
 PRODUCT_NAME = nlytical
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.nlytical
+PRODUCT_BUNDLE_IDENTIFIER = com.nlytical_app.primo
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2026 com.example. All rights reserved.

@@ -1,122 +1,147 @@
+//3.32.7
+import 'package:nlytical/utils/global.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
+import 'package:nlytical/User/screens/controller/user_tab_controller.dart';
+import 'package:nlytical/auth/splash.dart';
+import 'package:nlytical/controllers/role_controller.dart';
+import 'package:nlytical/controllers/user_controllers/add_review_contro.dart';
+import 'package:nlytical/controllers/user_controllers/appfeedback_contro.dart';
+import 'package:nlytical/controllers/user_controllers/block_contro.dart';
+import 'package:nlytical/controllers/user_controllers/categories_contro.dart';
+import 'package:nlytical/controllers/user_controllers/chat_contro.dart';
+import 'package:nlytical/controllers/user_controllers/delete_contro.dart';
+import 'package:nlytical/controllers/user_controllers/edit_review_contro.dart';
+import 'package:nlytical/controllers/user_controllers/favourite_contro.dart';
+import 'package:nlytical/controllers/user_controllers/feedback_contro.dart';
+import 'package:nlytical/controllers/user_controllers/filter_contro.dart';
+import 'package:nlytical/controllers/user_controllers/forgot_contro.dart';
+import 'package:nlytical/controllers/user_controllers/forgot_otp_controller.dart';
+import 'package:nlytical/controllers/user_controllers/get_profile_contro.dart';
+import 'package:nlytical/controllers/user_controllers/home_contro.dart';
+import 'package:nlytical/controllers/user_controllers/like_contro.dart';
+import 'package:nlytical/controllers/user_controllers/login_contro.dart';
+import 'package:nlytical/controllers/user_controllers/mobile_contro.dart';
+import 'package:nlytical/controllers/user_controllers/otp_contro.dart';
+import 'package:nlytical/controllers/user_controllers/password_contro.dart';
+import 'package:nlytical/controllers/user_controllers/privacy_contro.dart';
+import 'package:nlytical/controllers/user_controllers/profile_detail_contro.dart';
+import 'package:nlytical/controllers/user_controllers/register_contro.dart';
+import 'package:nlytical/controllers/user_controllers/report_contro.dart';
+import 'package:nlytical/controllers/user_controllers/review_contro.dart';
+import 'package:nlytical/controllers/user_controllers/service_contro.dart';
+import 'package:nlytical/controllers/user_controllers/subcate_service_contro.dart';
+import 'package:nlytical/controllers/user_controllers/terms_contro.dart';
+import 'package:nlytical/controllers/user_controllers/vendor_info_contro.dart';
+import 'package:nlytical/controllers/vendor_controllers/budget_controller.dart';
+import 'package:nlytical/controllers/vendor_controllers/business_review_controller.dart';
+import 'package:nlytical/controllers/vendor_controllers/campaign_controller.dart';
+import 'package:nlytical/controllers/vendor_controllers/chat_controller.dart';
+import 'package:nlytical/controllers/vendor_controllers/insights_controller.dart';
+import 'package:nlytical/controllers/vendor_controllers/lang_controller.dart';
+import 'package:nlytical/controllers/vendor_controllers/location_controller.dart';
+import 'package:nlytical/controllers/vendor_controllers/payment_history_controller.dart';
+import 'package:nlytical/controllers/vendor_controllers/profile_cotroller.dart';
+import 'package:nlytical/controllers/vendor_controllers/review_controller.dart';
+import 'package:nlytical/controllers/vendor_controllers/service_controller.dart';
+import 'package:nlytical/controllers/vendor_controllers/support_controller.dart';
+import 'package:nlytical/controllers/vendor_controllers/tabbar_controller.dart';
+import 'package:nlytical/notification_service.dart';
+import 'package:nlytical/shared_preferences/shared_prefkey.dart';
+import 'package:nlytical/utils/colors.dart';
+import 'package:nlytical/controllers/theme_contro.dart';
+import 'package:nlytical/controllers/vendor_controllers/payment_controller.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+import 'auth/splash.dart';
+import 'controllers/vendor_controllers/lang_controller.dart';
+import 'notification_service.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+// Background message handler
+@pragma('vm:entry-point')
+Future<void> backgroundHandler(RemoteMessage message) async {}
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  LocalNotificationService.initialize();
+  await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(backgroundHandler);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
+  // Initialize secure storage
+  final storage = FlutterSecureStorage(
+    iOptions: IOSOptions(
+      accessibility: KeychainAccessibility.unlocked,
+      synchronizable: false,
+    ),
+  );
+  SecurePrefs(storage);
+  await SecurePrefs.getLoadPrefs();
+  Get.put(LanguageController());
+  Get.put(RoleController());
+  Get.put(PaymentController());
+  Get.put(RegisterContro());
+  Get.put(OtpController());
+  Get.put(PassCheckController());
+  Get.put(ThemeContro());
+  Get.put(LoginContro());
+  Get.put(MobileContro());
+  Get.put(UserTabController());
+  Get.put(VendorTabbarController());
+  Get.put(ForgotContro());
+  Get.put(HomeContro());
+  Get.put(ServiceContro());
+  Get.put(SubcateserviceContro());
+  Get.put(LikeContro());
+  Get.put(CategoriesContro());
+  Get.put(FilterContro());
+  Get.put(FavouriteContro());
+  Get.put(ReviewContro());
+  Get.put(ChatController());
+  Get.put(ProfileCotroller());
+  Get.put(ProfileDetailContro());
+  Get.put(DeleteController());
+  Get.put(PrivacyPolicyContro());
+  Get.put(TermsContro());
+  Get.put(FeedbackContro());
+  Get.put(PaymentHistoryController());
+  Get.put(InsightsController());
+  Get.put(BlockContro());
+  Get.put(ReportContro());
+  Get.put(AddreviewContro());
+  Get.put(VendorInfoContro());
+  Get.put(EditReviewContro());
+  Get.put(AppfeedbackContro());
+  Get.put(ChatControllervendor());
+  Get.put(BusinessReviewController());
+  Get.put(ReviewControvendor());
+  Get.put(LocationController());
+  Get.put(CampaignController());
+  Get.put(BudgetController());
+  Get.put(ServiceController());
+  Get.put(ForgotOtpController());
+  Get.put(GetprofileContro());
+  Get.put(SupportController());
+  Get.put(PaymentController());
+  final String langId = userLangID.isNotEmpty == true ? userLangID : "1";
+  await Get.put(
+    LanguageController(),
+  ).getLanguageTranslation(lnId: langId.toString());
 
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
+  runApp(
+    Obx(() {
+      return GetMaterialApp(
+        navigatorKey: navigatorKey,
+        textDirection: languageController.currentDirection.value,
+        themeMode: ThemeMode.system,
+        color: Appcolors.white,
+        locale: const Locale('en', 'US'),
+        debugShowCheckedModeBanner: false,
+        home: SplashScreen(),
+      );
+    }),
+  );
 }
