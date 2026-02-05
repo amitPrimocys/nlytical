@@ -2,7 +2,6 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -35,7 +34,6 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:uuid/uuid.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-import 'dart:developer' as developer;
 
 class SubscriptionSceen extends StatefulWidget {
   const SubscriptionSceen({super.key});
@@ -83,14 +81,14 @@ class _SubscriptionSceenState extends State<SubscriptionSceen> {
                 try {
                   final result =
                       jsonDecode(event as String) as Map<String, dynamic>;
-                  developer.log('Google Pay result received: $result');
+                  debugPrint('Google Pay result received: $result');
                   _handleGooglePayResult(result);
                 } catch (e) {
-                  developer.log('Error parsing Google Pay result: $e');
+                  debugPrint('Error parsing Google Pay result: $e');
                 }
               },
               onError: (error) {
-                developer.log('Google Pay stream error: $error');
+                debugPrint('Google Pay stream error: $error');
               },
               cancelOnError: false,
             );
@@ -210,9 +208,9 @@ class _SubscriptionSceenState extends State<SubscriptionSceen> {
         PayProvider.google_pay: PaymentConfiguration.fromJsonString(configJson),
       });
 
-      developer.log("Google Pay client initialized successfully");
+      debugPrint("Google Pay client initialized successfully");
     } catch (e) {
-      developer.log("Failed to initialize Google Pay: $e");
+      debugPrint("Failed to initialize Google Pay: $e");
     }
   }
 
@@ -255,7 +253,7 @@ class _SubscriptionSceenState extends State<SubscriptionSceen> {
         );
       }
     } catch (e) {
-      developer.log("Google Pay success handling error: $e");
+      debugPrint("Google Pay success handling error: $e");
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("Error: $e")));
@@ -1168,7 +1166,7 @@ class _SubscriptionSceenState extends State<SubscriptionSceen> {
                                     // Note: Do NOT put success logic here!
                                     // It is handled in the EventChannel listener
                                   } catch (e) {
-                                    developer.log("Google Pay failed: $e");
+                                    debugPrint("Google Pay failed: $e");
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text("Google Pay error: $e"),
