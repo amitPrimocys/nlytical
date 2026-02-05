@@ -2740,7 +2740,7 @@ Widget appbarTitle(BuildContext context, {required String title}) {
   );
 }
 
-paymentDialogSucess() {
+Future<dynamic> paymentDialogSucess() {
   final ap = Get.bottomSheet(
     isDismissible: false,
     isScrollControlled: true,

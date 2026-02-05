@@ -983,7 +983,7 @@ class _FilterState extends State<Filter> {
     );
   }
 
-  containerDesign({
+  Widget containerDesign({
     required String image,
     required String title,
     required TextEditingController searchCtrl,
@@ -1126,7 +1126,7 @@ class _FilterState extends State<Filter> {
     );
   }
 
-  priceIndicator() {
+  Widget priceIndicator() {
     return Container(
       height: Get.height / 6,
       width: Get.width,

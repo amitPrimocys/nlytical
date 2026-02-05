@@ -348,7 +348,7 @@ class _ReviewState extends State<Review> {
     );
   }
 
-  Future deleteReviewAsk(index) {
+  Future deleteReviewAsk(int index) {
     return bottomSheetGobal(
       context,
       bottomsheetHeight: getProportionateScreenHeight(300),
@@ -430,7 +430,7 @@ class _ReviewState extends State<Review> {
     );
   }
 
-  void _confirmReview(index) {
+  void _confirmReview(int index) {
     showDialog(
       context: context,
       barrierDismissible: false,

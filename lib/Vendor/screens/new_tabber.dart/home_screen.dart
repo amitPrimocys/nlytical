@@ -39,8 +39,6 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nlytical/utils/global_fonts.dart';
 
-import 'line_chat/chart.dart';
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -357,6 +355,7 @@ class _HomeScreenState extends State<HomeScreen> {
               animatedCircularProgressIndicator(value: percentageValue / 100),
               Text(
                 percentageString == '0' && percentageString == null
+                    // ignore: dead_code
                     ? '0%'
                     : '$percentageString%', // Display the percentage here
                 style: TextStyle(

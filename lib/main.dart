@@ -55,10 +55,6 @@ import 'package:nlytical/utils/colors.dart';
 import 'package:nlytical/controllers/theme_contro.dart';
 import 'package:nlytical/controllers/vendor_controllers/payment_controller.dart';
 
-import 'auth/splash.dart';
-import 'controllers/vendor_controllers/lang_controller.dart';
-import 'notification_service.dart';
-
 // Background message handler
 @pragma('vm:entry-point')
 Future<void> backgroundHandler(RemoteMessage message) async {}

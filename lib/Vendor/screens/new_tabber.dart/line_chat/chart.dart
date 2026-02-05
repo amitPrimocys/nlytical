@@ -16,8 +16,6 @@ import 'package:nlytical/utils/global_fonts.dart';
 import 'package:nlytical/utils/size_config.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../../../../controllers/vendor_controllers/insights_controller.dart';
-
 class Chart extends StatefulWidget {
   const Chart({super.key});
 
@@ -512,7 +510,7 @@ class _ChartState extends State<Chart> {
     return "Next week loaded";
   }
 
-  rowWidget({required String title, required String count}) {
+  Widget rowWidget({required String title, required String count}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

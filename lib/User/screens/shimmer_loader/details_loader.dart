@@ -291,7 +291,7 @@ Widget _poster2(BuildContext context, List<String> imageUrls) {
   return SizedBox(height: Get.height * 0.25, width: Get.width, child: carousel);
 }
 
-Widget imagelist(context) {
+Widget imagelist(BuildContext context) {
   return Stack(
     clipBehavior: Clip.none,
     children: [

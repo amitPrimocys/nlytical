@@ -19,9 +19,6 @@ import 'package:nlytical/utils/global_fonts.dart';
 import 'package:nlytical/utils/global_text_form_field.dart';
 import 'package:nlytical/utils/size_config.dart';
 
-import '../controllers/user_controllers/password_contro.dart';
-import '../utils/global.dart';
-
 class Register extends StatefulWidget {
   const Register({super.key});
 

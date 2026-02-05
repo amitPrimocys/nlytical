@@ -51,7 +51,7 @@ class ExploreState extends State<Explore> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       filtercontro.scrollControllerlocation = ScrollController();
-      filtercontro.filterApiAll()!.then((_) {
+      filtercontro.filterApiAll().then((_) {
         filtercontro.addMarker1();
         addMarker();
       });

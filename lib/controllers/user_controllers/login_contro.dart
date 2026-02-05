@@ -15,8 +15,6 @@ import 'package:nlytical/utils/api_helper.dart';
 import 'package:nlytical/utils/common_widgets.dart';
 import 'package:nlytical/utils/global.dart';
 
-import '../../auth/profile_details.dart';
-
 GetprofileContro getprofileContro = Get.find();
 
 class LoginContro extends GetxController {

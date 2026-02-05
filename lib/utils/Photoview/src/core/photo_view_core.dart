@@ -1,4 +1,4 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
+// ignore_for_file: no_leading_underscores_for_local_identifiers, deprecated_member_use
 
 import 'package:flutter/widgets.dart';
 import 'package:nlytical/utils/Photoview/photo_view.dart'

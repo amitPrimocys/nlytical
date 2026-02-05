@@ -1,3 +1,5 @@
+// ignore_for_file: strict_top_level_inference
+
 import 'dart:async';
 import 'dart:convert';
 import 'package:nlytical/utils/global.dart';

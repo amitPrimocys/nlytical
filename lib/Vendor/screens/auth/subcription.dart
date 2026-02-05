@@ -2,9 +2,11 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:flutterwave_standard/core/flutterwave.dart';
 import 'package:flutterwave_standard/models/requests/customer.dart';
@@ -33,11 +35,7 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:uuid/uuid.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
-
-import '../../../controllers/vendor_controllers/login_controller.dart';
-import '../../../utils/global.dart';
-import '../../../utils/html_tag_icon.dart';
-import '../../payment/paypal_payment.dart';
+import 'dart:developer' as developer;
 
 class SubscriptionSceen extends StatefulWidget {
   const SubscriptionSceen({super.key});
@@ -52,6 +50,11 @@ class _SubscriptionSceenState extends State<SubscriptionSceen> {
   PaymentController paymentController = Get.find();
 
   Pay? payClient;
+  // Google Pay Event Channel
+  StreamSubscription? _paymentResultSubscription;
+  static const _eventChannel = EventChannel(
+    'plugins.flutter.io/pay/payment_result',
+  );
 
   late final InAppPurchase _iap = InAppPurchase.instance;
   List<ProductDetails> _products = [];
@@ -72,79 +75,27 @@ class _SubscriptionSceenState extends State<SubscriptionSceen> {
       if (Platform.isIOS) {
         initializeIAP();
       } else {
-        payClient = Pay({
-          PayProvider.google_pay: PaymentConfiguration.fromJsonString(
-            generateGooglePayConfig(
-              environment:
-                  paymentController.model.value.data!.googlePay!.mode!
-                          .toString()
-                          .toLowerCase() ==
-                      'test'
-                  ? "TEST"
-                  : "PRODUCTION", // Change to "TEST" for testing and PRODUCTION for live,
-              merchantId: paymentController
-                  .model
-                  .value
-                  .data!
-                  .googlePay!
-                  .publicKey!
-                  .toString(), // Your actual merchant ID
-              merchantName: paymentController
-                  .model
-                  .value
-                  .data!
-                  .googlePay!
-                  .secretKey!
-                  .toString(),
-              countryCode: paymentController
-                  .model
-                  .value
-                  .data!
-                  .googlePay!
-                  .countryCode!
-                  .toString()
-                  .toUpperCase(),
-              currencyCode: paymentController
-                  .model
-                  .value
-                  .data!
-                  .googlePay!
-                  .currencyCode!
-                  .toString()
-                  .toUpperCase(),
-            ),
-          ),
-          PayProvider.apple_pay: PaymentConfiguration.fromJsonString(
-            generateApplePayConfig(
-              merchantIdentifier: paymentController
-                  .model
-                  .value
-                  .data!
-                  .applepay!
-                  .publicKey!, // Dynamic Merchant ID
-              displayName: paymentController
-                  .model
-                  .value
-                  .data!
-                  .applepay!
-                  .secretKey!, // Dynamic Store Name
-              countryCode: paymentController
-                  .model
-                  .value
-                  .data!
-                  .applepay!
-                  .countryCode!
-                  .toUpperCase(),
-              currencyCode: paymentController
-                  .model
-                  .value
-                  .data!
-                  .applepay!
-                  .currencyCode!
-                  .toUpperCase(),
-            ),
-          ),
-        });
+        // Setup Google Pay result listener (very important!)
+        _paymentResultSubscription = _eventChannel
+            .receiveBroadcastStream()
+            .listen(
+              (dynamic event) {
+                try {
+                  final result =
+                      jsonDecode(event as String) as Map<String, dynamic>;
+                  developer.log('Google Pay result received: $result');
+                  _handleGooglePayResult(result);
+                } catch (e) {
+                  developer.log('Error parsing Google Pay result: $e');
+                }
+              },
+              onError: (error) {
+                developer.log('Google Pay stream error: $error');
+              },
+              cancelOnError: false,
+            );
+
+        _initializeGooglePay();
       }
     });
     loginContro.isPaymentSuccessLoading.value = false;
@@ -232,9 +183,93 @@ class _SubscriptionSceenState extends State<SubscriptionSceen> {
     }
   }
 
+  Future<void> _initializeGooglePay() async {
+    try {
+      final configJson = generateGooglePayConfig(
+        environment:
+            paymentController.model.value.data!.googlePay!.mode!
+                    .toString()
+                    .toLowerCase() ==
+                'test'
+            ? "TEST"
+            : "PRODUCTION",
+        merchantId: paymentController.model.value.data!.googlePay!.publicKey!,
+        merchantName: paymentController.model.value.data!.googlePay!.secretKey!,
+        countryCode: paymentController.model.value.data!.googlePay!.countryCode!
+            .toUpperCase(),
+        currencyCode: paymentController
+            .model
+            .value
+            .data!
+            .googlePay!
+            .currencyCode!
+            .toUpperCase(),
+      );
+
+      payClient = Pay({
+        PayProvider.google_pay: PaymentConfiguration.fromJsonString(configJson),
+      });
+
+      developer.log("Google Pay client initialized successfully");
+    } catch (e) {
+      developer.log("Failed to initialize Google Pay: $e");
+    }
+  }
+
+  // Handle Google Pay result (success, error, cancel)
+  Future<void> _handleGooglePayResult(Map<String, dynamic> result) async {
+    setState(() {
+      loginContro.isPaymentSuccessLoading.value = true;
+    });
+
+    try {
+      // Close dialog if open
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+
+      // You can extract token here if needed
+      // final token = result['paymentMethodData']?['tokenizationData']?['token'];
+
+      final success = await loginContro.paymentSuccess(
+        paymentType: "google pay",
+      );
+
+      if (success) {
+        paymentDialogSucess();
+
+        await Future.delayed(const Duration(seconds: 2));
+
+        Get.back();
+
+        if (isDemo == "false") {
+          if (isStoreGlobal == 0) {
+            await Get.to(() => AddStore())?.then((_) => setState(() {}));
+          } else {
+            Get.back();
+          }
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Payment verification failed")),
+        );
+      }
+    } catch (e) {
+      developer.log("Google Pay success handling error: $e");
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+    } finally {
+      setState(() {
+        loginContro.isPaymentSuccessLoading.value = false;
+      });
+    }
+  }
+
   @override
   void dispose() {
     _purchaseSubscription?.cancel();
+    _paymentResultSubscription?.cancel();
     super.dispose();
   }
 
@@ -861,10 +896,10 @@ class _SubscriptionSceenState extends State<SubscriptionSceen> {
     }
   }
 
-  paymentDialog() {
+  Future<dynamic> paymentDialog() {
     if (Platform.isIOS) {
       // For iOS, no payment dialog needed since we're using IAP directly in the plan cards
-      return;
+      return Future.value(null);
     }
     return Get.dialog(
       barrierColor: const Color.fromRGBO(0, 0, 0, 0.57),
@@ -1118,70 +1153,27 @@ class _SubscriptionSceenState extends State<SubscriptionSceen> {
                                               .value =
                                           true;
                                     });
-                                    final result = await payClient!
-                                        .showPaymentSelector(
-                                          PayProvider.google_pay,
-                                          [
-                                            PaymentItem(
-                                              amount: formattedAmount,
-                                              status:
-                                                  PaymentItemStatus.final_price,
-                                              label: "Nlytical app",
-                                            ),
-                                          ],
-                                        )
-                                        .then((value) async {
-                                          // _successPayment();
-                                          setState(() async {
-                                            Navigator.pop(context);
-                                            final success = await loginContro
-                                                .paymentSuccess(
-                                                  paymentType: "google pay",
-                                                );
 
-                                            if (success) {
-                                              paymentDialogSucess();
+                                    await payClient!.showPaymentSelector(
+                                      PayProvider.google_pay,
+                                      [
+                                        PaymentItem(
+                                          label: "Nlytical app",
+                                          amount: formattedAmount,
+                                          status: PaymentItemStatus.final_price,
+                                        ),
+                                      ],
+                                    );
 
-                                              Future.delayed(
-                                                const Duration(seconds: 2),
-                                                () {
-                                                  Get.back();
-                                                  if (isDemo == "false") {
-                                                    if (isStoreGlobal == 0) {
-                                                      Get.to(
-                                                        () => AddStore(),
-                                                      )!.then((_) {
-                                                        setState(() {});
-                                                      });
-                                                    } else {
-                                                      Get.back();
-                                                    }
-                                                  }
-                                                },
-                                              );
-                                              setState(() {});
-                                            }
-                                            setState(() {
-                                              loginContro
-                                                      .isPaymentSuccessLoading
-                                                      .value =
-                                                  false;
-                                            });
-                                            setState(() {
-                                              loginContro
-                                                      .isPaymentSuccessLoading
-                                                      .value =
-                                                  false;
-                                            });
-                                          });
-                                        });
+                                    // Note: Do NOT put success logic here!
+                                    // It is handled in the EventChannel listener
                                   } catch (e) {
-                                    setState(() {
-                                      loginContro
-                                              .isPaymentSuccessLoading
-                                              .value =
-                                          false;
-                                    });
+                                    developer.log("Google Pay failed: $e");
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text("Google Pay error: $e"),
+                                      ),
+                                    );
                                   } finally {
                                     setState(() {
                                       loginContro
@@ -1431,25 +1423,50 @@ class _SubscriptionSceenState extends State<SubscriptionSceen> {
     required String totlaAmt,
   }) async {
     loginContro.isPaymentSuccessLoading.value = true; // Start showing loader
+    debugPrint("🟡 Stripe Start");
+    debugPrint("🔑 Secret Key: $key");
+    debugPrint("💰 Total Amount: $totlaAmt");
 
     // Find the matching currency code
     String currencyCode = "USD"; // Default currency
     int stripeAmountInCents = (double.parse(totlaAmt) * 100).round();
+
+    debugPrint("💵 Stripe Amount (cents): $stripeAmountInCents");
     try {
       // Call createCustomer API
+      debugPrint("➡️ Creating customer...");
       customer = await createCustomer(key: key);
+
+      debugPrint("✅ Customer Response: $customer");
 
       // Check if the customer creation was successful
       if (customer != null && customer!.containsKey('id')) {
+        debugPrint("❌ Customer creation failed");
         // Get the customer ID
         String customerId = customer!['id'];
+        debugPrint("🆔 Customer ID: $customerId");
 
+        debugPrint("➡️ Creating payment intent...");
         paymentIntent = await createPaymentIntent(
           stripeAmountInCents.toString(),
           currencyCode,
           customerId,
           key: key,
         );
+
+        debugPrint("✅ PaymentIntent Response: $paymentIntent");
+
+        if (paymentIntent == null ||
+            !paymentIntent!.containsKey('client_secret')) {
+          debugPrint("❌ PaymentIntent failed");
+          loginContro.isPaymentSuccessLoading.value = false;
+          return;
+        }
+
+        debugPrint("🔐 Client Secret: ${paymentIntent!['client_secret']}");
+
+        /// STEP 3: Init Payment Sheet
+        debugPrint("➡️ Initializing Payment Sheet...");
 
         var gpay = PaymentSheetGooglePay(
           merchantCountryCode: 'US',
@@ -1465,11 +1482,18 @@ class _SubscriptionSceenState extends State<SubscriptionSceen> {
             style: ThemeMode.light,
             googlePay: gpay,
             allowsDelayedPaymentMethods: true,
+            appearance: const PaymentSheetAppearance(
+              colors: PaymentSheetAppearanceColors(primary: Colors.blue),
+            ),
           ),
         );
 
         // STEP 3: Display Payment sheet
-        displayPaymentSheet();
+        debugPrint("✅ Payment Sheet Initialized");
+
+        /// STEP 4: Present Payment Sheet
+        debugPrint("➡️ Presenting Payment Sheet...");
+        await displayPaymentSheet();
 
         loginContro.isPaymentSuccessLoading.value =
             false; // Stop showing loader
@@ -1477,18 +1501,24 @@ class _SubscriptionSceenState extends State<SubscriptionSceen> {
         loginContro.isPaymentSuccessLoading.value =
             false; // Stop showing loader
       }
-    } catch (err) {
+    } catch (e, s) {
       loginContro.isPaymentSuccessLoading.value = false; // Stop showing loader
-      (err);
+      debugPrint("🔥 Stripe Error: $e");
+      debugPrint("📍 StackTrace: $s");
+    } finally {
+      loginContro.isPaymentSuccessLoading.value = false;
     }
   }
 
   Future<void> displayPaymentSheet() async {
     try {
+      debugPrint("🟢 Opening Stripe Payment Sheet...");
+
       await Stripe.instance.presentPaymentSheet().then((value) async {
         Get.back();
         final success = await loginContro.paymentSuccess(paymentType: "stripe");
 
+        debugPrint("📦 Backend Payment Success: $success");
         if (success) {
           paymentDialogSucess();
 
@@ -1515,7 +1545,7 @@ class _SubscriptionSceenState extends State<SubscriptionSceen> {
       });
     } catch (e) {
       loginContro.isPaymentSuccessLoading.value = false; // Stop showing loader
-      ('$e');
+      debugPrint("❌ Payment Sheet Error: $e");
     }
   }
 
@@ -1532,6 +1562,11 @@ class _SubscriptionSceenState extends State<SubscriptionSceen> {
         'customer': customerId,
       };
 
+      debugPrint("➡️ Stripe PI API Call");
+      debugPrint(
+        "Amount: $amount | Currency: $currency | Customer: $customerId",
+      );
+
       var response = await http.post(
         Uri.parse('https://api.stripe.com/v1/payment_intents'),
         headers: {
@@ -1541,15 +1576,18 @@ class _SubscriptionSceenState extends State<SubscriptionSceen> {
         body: body,
       );
 
-      (json.decode(response.body));
+      debugPrint("📡 PI Status Code: ${response.statusCode}");
+      debugPrint("📡 PI Response: ${response.body}");
       return json.decode(response.body);
     } catch (err) {
+      debugPrint("❌ PI Exception: $err");
       throw Exception(err.toString());
     }
   }
 
   Future<dynamic> createCustomer({required String key}) async {
     try {
+      debugPrint("➡️ Stripe Create Customer");
       Map<String, dynamic> body = {'email': "demo2@gmail.com"};
 
       var response = await http.post(
@@ -1560,9 +1598,12 @@ class _SubscriptionSceenState extends State<SubscriptionSceen> {
         },
         body: body, //json.encode(body),
       );
+      debugPrint("📡 Customer Status Code: ${response.statusCode}");
+      debugPrint("📡 Customer Response: ${response.body}");
+
       return json.decode(response.body);
     } catch (err) {
-      (err.toString());
+      debugPrint("❌ Customer Exception: $err");
       throw Exception(err.toString());
     }
   }

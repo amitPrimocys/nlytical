@@ -608,7 +608,8 @@ class _SubDetailsState extends State<SubDetails> {
               } else {
                 // whatsapp();
                 _launchWhatsapp(
-                  servicecontro.servicemodel.value!.serviceDetail!.whatsappLink,
+                  servicecontro.servicemodel.value!.serviceDetail!.whatsappLink
+                      .toString(),
                 );
               }
             },
@@ -629,7 +630,7 @@ class _SubDetailsState extends State<SubDetails> {
     );
   }
 
-  Future<void> _launchWhatsapp(url) async {
+  Future<void> _launchWhatsapp(String url) async {
     url = url;
     //"https://wa.me/?text=Hey buddy, try this super cool new app!";
     if (await canLaunch(url)) {

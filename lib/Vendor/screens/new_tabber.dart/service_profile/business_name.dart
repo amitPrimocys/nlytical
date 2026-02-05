@@ -12,9 +12,6 @@ import 'package:nlytical/utils/size_config.dart';
 import 'package:nlytical/utils/common_widgets.dart';
 import 'package:html/parser.dart' as parser;
 
-import '../../../../utils/flexible_space.dart';
-import '../../../../utils/global.dart';
-
 class BusinessNameScreen extends StatefulWidget {
   const BusinessNameScreen({super.key});
 

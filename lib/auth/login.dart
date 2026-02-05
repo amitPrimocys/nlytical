@@ -25,9 +25,7 @@ import 'package:nlytical/utils/global_fonts.dart';
 import 'package:nlytical/utils/global_text_form_field.dart';
 import 'package:nlytical/utils/size_config.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import '../shared_preferences/shared_prefkey.dart';
-import 'google_signin.dart';
 
 class Login extends StatefulWidget {
   final bool isLogin;

@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:convert';
 import 'package:nlytical/shared_preferences/prefrences_key.dart';
 import 'package:nlytical/utils/global.dart';

@@ -275,7 +275,6 @@ class GetprofileContro extends GetxController {
       await SecurePrefs.getMultipleAndSetGlobalsWithMap({
         SecureStorageKeys.AUTH_TOKEN: (v) => authToken = v!,
       });
-      print("authToken:$authToken");
       isupdate(true);
       var uri = Uri.parse(apiHelper.update);
       var request = http.MultipartRequest('Post', uri);

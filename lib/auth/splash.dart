@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
+// ignore_for_file: prefer_typing_uninitialized_variables, strict_top_level_inference
 import 'dart:async';
 import 'dart:convert';
 import 'package:nlytical/User/screens/homeScreen/chat_screen2.dart';
@@ -35,7 +35,7 @@ class SplashScreen extends StatefulWidget {
 class SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   var _visible = true;
-  var _isLightMode;
+  var isLightMode;
   ChatController messageController = Get.find();
 
   AnimationController? animationController;
@@ -219,16 +219,16 @@ class SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> assignValueForMode() async {
-    _isLightMode = await SecurePrefs.getBool(SecureStorageKeys.isLightMode);
+    isLightMode = await SecurePrefs.getBool(SecureStorageKeys.isLightMode);
 
-    if (_isLightMode == null) {
+    if (isLightMode == null) {
       // First time: set default as true
-      _isLightMode = true;
-      await SecurePrefs.setBool(SecureStorageKeys.isLightMode, _isLightMode!);
+      isLightMode = true;
+      await SecurePrefs.setBool(SecureStorageKeys.isLightMode, isLightMode!);
     }
 
     // Now update the theme
-    themeContro.updateLightModeValue(_isLightMode!);
+    themeContro.updateLightModeValue(isLightMode!);
   }
 
   @override

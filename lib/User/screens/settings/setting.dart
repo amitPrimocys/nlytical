@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, unused_element, non_constant_identifier_names, avoid_print, use_build_context_synchronously
+// ignore_for_file: prefer_const_constructors, unused_element, non_constant_identifier_names, avoid_print, use_build_context_synchronously, deprecated_member_use
 
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -38,10 +38,6 @@ import 'package:nlytical/utils/size_config.dart';
 import 'package:nlytical/utils/slider_custom.dart';
 import 'package:nlytical/Vendor/screens/auth/subcription.dart';
 import 'package:share_plus/share_plus.dart';
-
-import '../../../Vendor/screens/auth/subcription.dart';
-import '../../../Vendor/screens/new_tabber.dart/web_view.dart';
-import '../../../utils/global.dart';
 
 class Setting extends StatefulWidget {
   const Setting({super.key});
@@ -1050,7 +1046,7 @@ class _SettingState extends State<Setting> {
     );
   }
 
-  appFeedback() {
+  Obx appFeedback() {
     final AppfeedbackContro appfeedbackContro = Get.find();
     return Obx(() {
       return Padding(

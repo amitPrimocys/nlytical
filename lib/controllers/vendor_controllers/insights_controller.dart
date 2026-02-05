@@ -6,8 +6,6 @@ import 'package:nlytical/utils/api_helper.dart';
 import 'package:nlytical/utils/common_widgets.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../../utils/api_helper.dart';
-
 class InsightsController extends GetxController {
   ApiHelper apiHelper = ApiHelper();
   RxBool isLoading = false.obs;

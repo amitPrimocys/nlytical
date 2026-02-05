@@ -21,8 +21,6 @@ import 'package:nlytical/utils/global_text_form_field.dart';
 import 'package:nlytical/utils/size_config.dart';
 import 'package:nlytical/utils/spinkit_loader.dart';
 
-import '../../../controllers/user_controllers/get_profile_contro.dart';
-
 class Profile extends StatefulWidget {
   const Profile({super.key});
 

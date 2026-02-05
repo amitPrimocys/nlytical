@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, strict_top_level_inference
 
 import 'dart:convert';
 

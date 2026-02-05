@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, unused_local_variable, avoid_print, use_build_context_synchronously
+// ignore_for_file: must_be_immutable, unused_local_variable, avoid_print, use_build_context_synchronously, deprecated_member_use
 
 import 'dart:async';
 import 'dart:ui';
@@ -1332,7 +1332,7 @@ class _ChatScreen2State extends State<ChatScreen2> {
     );
   }
 
-  report() {
+  Obx report() {
     return Obx(() {
       return reportcontro.isreport.value
           ? Center(

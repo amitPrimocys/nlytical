@@ -46,6 +46,14 @@
           }
         },
         {
+          "client_id": "231154851270-vmatq200j1tcttcittubnggr2q5eb2en.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nlytical_app.primo",
+            "certificate_hash": "acd0af962dd018aa35c70917a14513fb38b17078"
+          }
+        },
+        {
           "client_id": "231154851270-jo8pmg3sdbudsja4j549ooadtcalm995.apps.googleusercontent.com",
           "client_type": 3
         }
